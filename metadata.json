@@ -1,0 +1,7 @@
+{
+  "name": "Project Drishti - Smart Crowd Management",
+  "description": "An AI-  dashboard for real-time crowd monitoring, risk prediction, and stampede prevention for major pilgrimage sites like Somnath, Dwarka, and Ambaji.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

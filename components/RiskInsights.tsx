@@ -1,0 +1,70 @@
+
+import React from 'react';
+import { AIAnalysisResponse, AlertSeverity } from '../types';
+import { SEVERITY_COLORS, SEVERITY_TEXT_COLORS } from '../constants';
+
+interface RiskInsightsProps {
+  analysis: AIAnalysisResponse;
+  loading: boolean;
+}
+
+const RiskInsights: React.FC<RiskInsightsProps> = ({ analysis, loading }) => {
+  return (
+    <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+      <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2">
+          <i className="fas fa-brain text-purple-400"></i>
+          AI PREDICTIVE RISK ANALYSIS
+        </h3>
+        {loading && (
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Processing</span>
+          </div>
+        )}
+      </div>
+
+      <div className="p-6">
+        <div className="flex items-start gap-6 mb-8">
+          <div className={`shrink-0 w-24 h-24 rounded-2xl border flex flex-col items-center justify-center gap-1 ${SEVERITY_COLORS[analysis.riskLevel]}`}>
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">Risk Level</span>
+            <span className="text-xl font-black">{analysis.riskLevel}</span>
+          </div>
+          
+          <div className="flex-1">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Confidence Assessment</h4>
+            <p className="text-slate-200 text-sm leading-relaxed italic">
+              "{analysis.prediction}"
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+             <i className="fas fa-list-check"></i>
+             Actionable Security Protocols
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {analysis.recommendations.map((rec, idx) => (
+              <div key={idx} className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 flex gap-3 items-start group hover:border-indigo-500/30 transition-all">
+                <div className="mt-1 w-5 h-5 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 text-[10px] font-bold">
+                  {idx + 1}
+                </div>
+                <p className="text-xs text-slate-300 group-hover:text-white leading-tight">{rec}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      <div className="px-6 py-3 bg-slate-950/50 border-t border-slate-800 flex justify-between items-center">
+        <span className="text-[10px] text-slate-500">Engine: Gemini 3-Flash-Preview v2.5</span>
+        <button className="text-[10px] text-indigo-400 font-bold uppercase tracking-widest hover:text-indigo-300">
+          Export Full Report
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default RiskInsights;
