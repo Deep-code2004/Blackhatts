@@ -7,9 +7,12 @@ interface HeaderProps {
   cameraEnabled: boolean;
   onToggleCamera: () => void;
   onOpenExport: () => void;
+  onOpenNotifications: () => void;
+  onOpenMenu: () => void;
+  alertsCount: number;
 }
 
-const Header: React.FC<HeaderProps> = ({ locationName, status, cameraEnabled, onToggleCamera, onOpenExport }) => {
+const Header: React.FC<HeaderProps> = ({ locationName, status, cameraEnabled, onToggleCamera, onOpenExport, onOpenNotifications, onOpenMenu, alertsCount }) => {
   return (
     <header className="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-slate-950/50 backdrop-blur-md sticky top-0 z-20">
       <div className="flex items-center gap-4">
@@ -46,12 +49,24 @@ const Header: React.FC<HeaderProps> = ({ locationName, status, cameraEnabled, on
           <i className="fas fa-download text-xl"></i>
         </button>
 
-        <button className="relative text-slate-400 hover:text-white transition-colors">
+        <button
+          onClick={onOpenNotifications}
+          className="relative text-slate-400 hover:text-white transition-colors cursor-pointer"
+          title="Notifications"
+        >
           <i className="fas fa-bell text-xl"></i>
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">3</span>
+          {alertsCount > 0 && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
+              {alertsCount > 9 ? '9+' : alertsCount}
+            </span>
+          )}
         </button>
 
-        <button className="text-slate-400 hover:text-white transition-colors">
+        <button
+          onClick={onOpenMenu}
+          className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+          title="Menu"
+        >
           <i className="fas fa-th-large text-xl"></i>
         </button>
       </div>

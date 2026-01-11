@@ -5,9 +5,11 @@ import { TEMPLE_LOCATIONS } from '../constants';
 interface SidebarProps {
   selectedTemple: string;
   onSelectTemple: (id: string) => void;
+  currentView: string;
+  onSelectView: (view: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ selectedTemple, onSelectTemple }) => {
+const Sidebar: React.FC<SidebarProps> = ({ selectedTemple, onSelectTemple, currentView, onSelectView }) => {
   return (
     <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen sticky top-0">
       <div className="p-6 border-b border-slate-800">
@@ -45,11 +47,11 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedTemple, onSelectTemple }) => 
         <div className="px-4 mt-8">
            <p className="text-[10px] font-bold text-slate-500 uppercase px-2 mb-2">Modules</p>
            <div className="space-y-1">
-             <NavItem icon="fa-chart-pie" label="Analytics" active />
-             <NavItem icon="fa-video" label="Live Feeds" />
-             <NavItem icon="fa-map-marked-alt" label="Heatmaps" />
-             <NavItem icon="fa-history" label="Alert Logs" />
-             <NavItem icon="fa-cog" label="Settings" />
+             <NavItem icon="fa-chart-pie" label="Analytics" active={currentView === 'analytics'} onClick={() => onSelectView('analytics')} />
+             <NavItem icon="fa-video" label="Live Feeds" active={currentView === 'live-feeds'} onClick={() => onSelectView('live-feeds')} />
+             <NavItem icon="fa-map-marked-alt" label="Heatmaps" active={currentView === 'heatmaps'} onClick={() => onSelectView('heatmaps')} />
+             <NavItem icon="fa-history" label="Alert Logs" active={currentView === 'alert-logs'} onClick={() => onSelectView('alert-logs')} />
+             <NavItem icon="fa-cog" label="Settings" active={currentView === 'settings'} onClick={() => onSelectView('settings')} />
            </div>
         </div>
       </nav>
@@ -72,10 +74,13 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedTemple, onSelectTemple }) => 
   );
 };
 
-const NavItem = ({ icon, label, active = false }: { icon: string; label: string; active?: boolean }) => (
-  <button className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-all ${
-    active ? 'text-indigo-400' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-  }`}>
+const NavItem = ({ icon, label, active = false, onClick }: { icon: string; label: string; active?: boolean; onClick?: () => void }) => (
+  <button
+    onClick={onClick}
+    className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-all ${
+      active ? 'text-indigo-400' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+    }`}
+  >
     <i className={`fas ${icon} text-sm w-5 text-center`}></i>
     <span className="text-sm font-medium">{label}</span>
   </button>

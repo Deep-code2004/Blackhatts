@@ -5,9 +5,11 @@ import { SEVERITY_COLORS } from '../constants';
 
 interface AlertFeedProps {
   alerts: Alert[];
+  onViewAllLogs?: () => void;
+  onAcknowledgeAlert?: (alertId: string) => void;
 }
 
-const AlertFeed: React.FC<AlertFeedProps> = ({ alerts }) => {
+const AlertFeed: React.FC<AlertFeedProps> = ({ alerts, onViewAllLogs, onAcknowledgeAlert }) => {
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl flex flex-col h-full">
       <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
@@ -40,14 +42,22 @@ const AlertFeed: React.FC<AlertFeedProps> = ({ alerts }) => {
                   <i className="fas fa-location-dot text-[10px] opacity-60"></i>
                   <span className="text-[10px] font-bold uppercase tracking-wider">{alert.location}</span>
                 </div>
-                <button className="text-[10px] font-bold uppercase tracking-widest text-white/80 hover:text-white">Acknowledge</button>
+                <button
+                  onClick={() => onAcknowledgeAlert?.(alert.id)}
+                  className="text-[10px] font-bold uppercase tracking-widest text-white/80 hover:text-white cursor-pointer"
+                >
+                  Acknowledge
+                </button>
               </div>
             </div>
           ))
         )}
       </div>
 
-      <button className="w-full py-4 text-xs font-bold text-slate-400 bg-slate-950 border-t border-slate-800 hover:text-white hover:bg-slate-900 transition-colors">
+      <button
+        onClick={onViewAllLogs}
+        className="w-full py-4 text-xs font-bold text-slate-400 bg-slate-950 border-t border-slate-800 hover:text-white hover:bg-slate-900 transition-colors cursor-pointer"
+      >
         VIEW ALL LOGS
       </button>
     </div>

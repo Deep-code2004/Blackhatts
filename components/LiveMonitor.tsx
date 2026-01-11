@@ -4,10 +4,13 @@ import { CrowdMetric, AlertSeverity } from '../types';
 
 interface LiveMonitorProps {
   metrics: CrowdMetric[];
+  onExpand?: () => void;
 }
 
-const LiveMonitor: React.FC<LiveMonitorProps> = ({ metrics }) => {
+const LiveMonitor: React.FC<LiveMonitorProps> = ({ metrics, onExpand }) => {
   const [frame, setFrame] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -27,6 +30,34 @@ const LiveMonitor: React.FC<LiveMonitorProps> = ({ metrics }) => {
         .catch(err => console.log("Webcam access denied", err));
     }
   }, []);
+
+  const handleExpand = () => {
+    if (onExpand) {
+      onExpand();
+    } else {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
+  const handleSnapshot = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        canvas.width = videoRef.current.videoWidth;
+        canvas.height = videoRef.current.videoHeight;
+        ctx.drawImage(videoRef.current, 0, 0);
+        const link = document.createElement('a');
+        link.download = `snapshot-${new Date().toISOString()}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      }
+    }
+  };
+
+  const handleHistory = () => {
+    setShowHistory(!showHistory);
+  };
 
   // Fix: Updated fallback object to include all CrowdMetric properties (anomalyScore, location, timestamp) to prevent TS union property errors.
   const latestMetric = metrics[metrics.length - 1] || { 
@@ -80,9 +111,27 @@ const LiveMonitor: React.FC<LiveMonitorProps> = ({ metrics }) => {
 
         <div className="p-4 bg-slate-900/80 border-t border-slate-800 flex justify-between items-center">
           <div className="flex gap-4">
-             <button className="text-slate-400 hover:text-white"><i className="fas fa-expand"></i></button>
-             <button className="text-slate-400 hover:text-white"><i className="fas fa-camera"></i></button>
-             <button className="text-slate-400 hover:text-white"><i className="fas fa-history"></i></button>
+             <button
+               onClick={handleExpand}
+               className="text-slate-400 hover:text-white cursor-pointer"
+               title="Expand View"
+             >
+               <i className="fas fa-expand"></i>
+             </button>
+             <button
+               onClick={handleSnapshot}
+               className="text-slate-400 hover:text-white cursor-pointer"
+               title="Take Snapshot"
+             >
+               <i className="fas fa-camera"></i>
+             </button>
+             <button
+               onClick={handleHistory}
+               className={`cursor-pointer ${showHistory ? 'text-indigo-400' : 'text-slate-400 hover:text-white'}`}
+               title="View History"
+             >
+               <i className="fas fa-history"></i>
+             </button>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono text-slate-500">RES: 1080P/60FPS</span>

@@ -2,7 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { AlertSeverity, CrowdMetric, AIAnalysisResponse } from "../types";
 
 // Always use const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 export const getCrowdAnalysis = async (metrics: CrowdMetric[], activeAlerts: string[]): Promise<AIAnalysisResponse> => {
   const prompt = `Analyze the following crowd metrics and active alerts for a major temple gathering. Predict stampede risks and provide specific security recommendations.
